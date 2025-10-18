@@ -1,31 +1,27 @@
-- name: creating ec2 & r53 using playbook
-  hosts: local
+- name: creating EC2 & Route53 using playbook
+  hosts: localhost
   connection: local
 
   vars:
-     ami_id: ami-09c813fb71547fc4f
-     sg_id: sg-01a477711f7deba28
-    # zone_id: "Z04092822ZCUHU7SWZ18H"
-   #  DOMAIN_NAME: "vigi-devops.fun"
-     instances:
-       - name: centos
-         ami_id: ami-09c813fb71547fc4f
-       - name: ubuntu
-         ami_id: ami-0360c520857e3138f  
-      
+    sg_id: sg-01a477711f7deba28
+    instances:
+      - name: centos
+        ami_id: ami-09c813fb71547fc4f
+      - name: ubuntu
+        ami_id: ami-0360c520857e3138f  
 
   tasks:
-    - name: create ec2 instance
+    - name: create EC2 instances
       amazon.aws.ec2_instance:
-         name: "{{ item.instances }}"
-         instance_type: t3.micro
-         security_group: "{{ sg_id }}"
-         image_id: "{{ item.ami_id }}"
-         tags:
-           Name: "{{ item.instances }}"
+        name: "{{ item.name }}"
+        instance_type: t3.micro
+        security_group: "{{ sg_id }}"
+        image_id: "{{ item.ami_id }}"
+        tags:
+          Name: "{{ item.name }}"
       loop: "{{ instances }}"
       register: ec2_output
 
-    - name: print the ec2_output
+    - name: print EC2 output
       ansible.builtin.debug:
-         msg: {{ ec2_output }}  
+        var: ec2_output
