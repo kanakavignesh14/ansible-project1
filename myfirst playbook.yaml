@@ -5,26 +5,24 @@
   vars:
      ami_id: ami-09c813fb71547fc4f
      sg_id: sg-01a477711f7deba28
-     zone_id: "Z04092822ZCUHU7SWZ18H"
-     DOMAIN_NAME: "vigi-devops.fun"
+    # zone_id: "Z04092822ZCUHU7SWZ18H"
+   #  DOMAIN_NAME: "vigi-devops.fun"
      instances:
-       - redis
-       - mongodb
-       - user
-       - shipping
-       - catalogue
-       - cart
+       - name: centos
+         ami_id: ami-09c813fb71547fc4f
+       - name: ubuntu
+         ami_id: ami-0360c520857e3138f  
       
 
   tasks:
     - name: create ec2 instance
       amazon.aws.ec2_instance:
-         name: "{{ item }}"
+         name: "{{ item.instances }}"
          instance_type: t3.micro
          security_group: "{{ sg_id }}"
-         image_id: "{{ ami_id }}"
+         image_id: "{{ item.ami_id }}"
          tags:
-           Name: "{{ item }}"
+           Name: "{{ item.instances }}"
       loop: "{{ instances }}"
       register: ec2_output
 
