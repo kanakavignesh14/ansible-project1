@@ -1,0 +1,17 @@
+plugin: amazon.aws.aws_ec2
+regions:
+  - us-east-1       # replace with your AWS region
+
+filters:
+  instance-state-name: running
+  "tag:Environment": dev       # ✅ correct syntax for filtering by tag
+
+keyed_groups:
+  - key: tags.Environment
+    prefix: dynamic
+
+hostnames:
+  - private-ip-address
+
+compose:
+  ansible_host: private-ip-address
